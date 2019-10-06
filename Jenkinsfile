@@ -1,14 +1,10 @@
-agent {
-    kubernetes {
-        label podlabel
-        yaml """
-kind: Pod
-metadata:
-  name: jenkins-slave
-spec:
-  containers:
-  - name: kaniko
-    image: tomcat:latest
-    imagePullPolicy: Always
-"""
-   }
+node('test-pod') {
+    stage('Checkout') {
+        checkout scm
+    }
+    stage('Build'){
+        container('tomcat') {
+            // This is where we build our code.
+        }
+    }
+}
