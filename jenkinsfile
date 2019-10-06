@@ -1,32 +1,16 @@
 
-def call(){
-agent =  """
-  apiVersion: v1
-  kind: Pod
-  metadata:
-   labels:
-     name: test-pod
-   spec:
-     containers:
-     - name: tomcat 
-       image: tomcat:slave
-       workingDir: /var/jenkins_home
-"""
-return agent
-}
-pipeline {
-  agent {
+agent {
     kubernetes {
-      label 'test-pod
-      defaultContainer 'tomacat'
-      yaml getAgent()
-    }
-  }
-  stages{
-     stage ('stage1'){
-       steps{
-        // Define custom steps as per requirement
-       }
-     }
-  }
-}
+        label pod
+        yaml """
+kind: Pod
+metadata:
+  name: jenkins-slave
+spec:
+  containers:
+  - name: kaniko
+    image: tomcat:latest
+    imagePullPolicy: Always
+  restartPolicy: Never
+"""
+   }
